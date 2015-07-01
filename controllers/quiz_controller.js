@@ -38,7 +38,7 @@ exports.index = function(req, res){
     search = search.replace(/\s{1,}/g, '%');
     search = '%'+search+'%';
 
-    models.Quiz.findAll({where: ["pregunta like ?", search]}).then(
+    models.Quiz.findAll({where: ["pregunta like ?", search] ,order: 'pregunta ASC'}).then(
       function(quizes){
         res.render('quizes/index.ejs',{quizes:quizes});
       });
