@@ -14,25 +14,39 @@ exports.load = function(req,res,next,quizId){
       }
   );
 };
+
 //GET /quiizes/:id
 exports.show = function(req, res){
-      res.render('quizes/show',{quiz : req.quiz});
+            res.render('quizes/show',{quiz : req.quiz});
   };
+
 //GET /quizes/answer
 exports.answer = function(req, res){
-
     if(req.query.respuesta === req.quiz.respuesta){
       res.render('quizes/answer', {quiz : req.quiz,respuesta : 'Correcto'});
     }else{
       res.render('quizes/answer', {quiz : req.quiz,respuesta : 'Incorrecto'});
     }
-
 };
 
 exports.index = function(req, res){
-  models.Quiz.findAll().then(function(quizes){
-  res.render('quizes/index.ejs',{quizes:quizes});
-  });
+
+  if(req.query.search){
+
+    var search = req.query.search;
+    
+    search = search.replace(/\s{1,}/g, '%');
+    search = '%'+search+'%';
+    console.log(search);
+    models.Quiz.findAll({where: ["pregunta like ?", search]}).then(
+      function(quizes){
+        res.render('quizes/index.ejs',{quizes:quizes});
+      });
+    }else{
+    models.Quiz.findAll().then(function(quizes){
+      res.render('quizes/index.ejs',{quizes:quizes});
+    });
+  }
 };
 
 //GET /author
