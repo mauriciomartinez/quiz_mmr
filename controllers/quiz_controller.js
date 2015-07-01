@@ -34,10 +34,10 @@ exports.index = function(req, res){
   if(req.query.search){
 
     var search = req.query.search;
-
+    
     search = search.replace(/\s{1,}/g, '%');
     search = '%'+search+'%';
-
+    
     models.Quiz.findAll({where: ["pregunta like ?", search]}).then(
       function(quizes){
         res.render('quizes/index.ejs',{quizes:quizes});
