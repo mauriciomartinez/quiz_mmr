@@ -15,6 +15,24 @@ exports.load = function(req,res,next,quizId){
   );
 };
 
+//GET /quizes/new insercion de nuevas preguntas
+exports.new = function(req, res){
+  var quiz = models.Quiz.build({pregunta :"Pregunta",respuesta:"Respuesta"});
+  res.render('quizes/new',{quiz : quiz});
+};
+
+//GET /quizes/new insercion de nuevas preguntas
+exports.create = function(req, res){
+  var quiz = models.Quiz.build(req.body.quiz);
+  //guardamos en base de datos
+  quiz.save({fields:['pregunta','respuesta']}).then(
+    function(){
+      res.redirect('/quizes');
+    }); //redireccion a http relativo de preguntas
+};
+
+
+
 //GET /quiizes/:id
 exports.show = function(req, res){
             res.render('quizes/show',{quiz : req.quiz});
@@ -38,7 +56,7 @@ exports.index = function(req, res){
     search = search.replace(/\s{1,}/g, '%');
     search = '%'+search+'%';
 
-    models.Quiz.findAll({where: ["pregunta like ?", search] ,order: 'pregunta ASC'}).then(
+    models.Quiz.findAll({where: ["pregunta like ?", search] ,order: 'pregunta DESC'}).then(
       function(quizes){
         res.render('quizes/index.ejs',{quizes:quizes});
       });
